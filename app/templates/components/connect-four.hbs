@@ -1,0 +1,14 @@
+{{#if playing}}
+  {{#if winner}}
+    <div>
+      Player {{winner}} won!
+    </div>
+  {{/if}}
+  {{#if draw}}
+    We'll call it a draw.
+  {{/if}}
+  <button {{action "main"}}>Main Menu</button>
+{{else}}
+  <button {{action "start"}}>Start</button>
+{{/if}}
+<canvas id="stage" width="380" height="380"></canvas>

@@ -1,5 +1,17 @@
-{{!-- The following component displays Ember's default welcome message. --}}
-{{welcome-page}}
-{{!-- Feel free to remove this! --}}
-
-{{outlet}}
+<section id="app">
+  <header>
+    <h1>{{#link-to 'game'}}Connect 4{{/link-to}}</h1>
+  </header>
+  <article>
+    Connect 4
+    {{outlet}}
+  </article>
+  <footer>
+    <div class="float-left">
+      Powered by Ember.
+    </div>
+    <div class="float-right">
+      Nathan James Sharrocks
+    </div>
+  </footer>
+</section>
