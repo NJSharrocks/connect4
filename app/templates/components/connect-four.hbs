@@ -1,3 +1,5 @@
+{{! This nested if statement determines what shows when the player wins or draws,
+in this case it shows Player [insert player] won! or We'll call it a draw}}
 {{#if playing}}
   {{#if winner}}
     <div>
@@ -7,8 +9,13 @@
   {{#if draw}}
     We'll call it a draw.
   {{/if}}
-  <button {{action "main"}}>Main Menu</button>
+  {{!This ensures that the start button changes to a Main Menu button if the
+  game is in the playing state and actions the 'main' function if clicked}}
+  <div class="text-center"><button {{action "main"}}>Main Menu</button></div>
 {{else}}
-  <button {{action "start"}}>Start</button>
+  {{!This ensures that the start button remains if the game is not in the playing
+  state. It runs the 'start' function if clicked.}}
+  <div class="text-center"><button {{action "start"}}>Start</button></div>
 {{/if}}
+{{!sets the size of the canvas}}
 <canvas id="stage" width="380" height="380"></canvas>
