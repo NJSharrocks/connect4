@@ -9,13 +9,15 @@ in this case it shows Player [insert player] won! or We'll call it a draw}}
   {{#if draw}}
     We'll call it a draw.
   {{/if}}
-  {{!This ensures that the start button changes to a Main Menu button if the
-  game is in the playing state and actions the 'main' function if clicked}}
-  <div class="text-center"><button {{action "main"}}>Main Menu</button></div>
-{{else}}
+  {{!This ensures that the 2 Player button changes to a Main Menu button if the
+  game is in the playing state and actions the 'main' function if clicked whilst
+  the vs. Computer button changes to Restart, which runs the start function}}
+  <div class="text-center"><button {{action "main"}}>Main Menu</button>
+  <button {{action "start"}}>Restart</button></div>
+  {{else}}
   {{!This ensures that the start button remains if the game is not in the playing
   state. It runs the 'start' function if clicked.}}
-  <div class="text-center"><button {{action "start"}}>Start</button></div>
+    <div class="text-center"><button {{action "start"}}>vs. Computer</button></div>
 {{/if}}
 {{!sets the size of the canvas}}
 <canvas id="stage" width="380" height="380"></canvas>
