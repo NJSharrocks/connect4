@@ -13,6 +13,7 @@ function deepClone(state) {
   }
   return new_state;
 }
+
 /*The check_game_winner function is called later by check_winner when a player
 makes their turn. It will circle over the patterns below in order to see if
 there is a corresponding pattern within the confines of the playing board, which
@@ -134,6 +135,7 @@ function check_game_winner(state) {
         }
       }
     }
+    
     /*The following for loop checks for the tied game scenario by cycling through
     each cell on the game board grid and checking the status. If one is undefined,
     i.e. empty, then it allows the game to continue. If all cells are full and the
