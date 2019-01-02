@@ -18,8 +18,8 @@ function deepClone(state) {
 makes their turn. It will circle over the patterns below in order to see if
 there is a corresponding pattern within the confines of the playing board, which
 will be defined by the state of the grid cells - i.e. if they have changed from
-their original 'undefined' state to one being filled with either an 'x' marker
-or an 'o' marker*/
+their original 'undefined' state to one being filled with either an 'a' marker
+or a 'b' marker*/
 function check_game_winner(state) {
 
   var patterns = [
@@ -135,7 +135,7 @@ function check_game_winner(state) {
         }
       }
     }
-    
+
     /*The following for loop checks for the tied game scenario by cycling through
     each cell on the game board grid and checking the status. If one is undefined,
     i.e. empty, then it allows the game to continue. If all cells are full and the
@@ -237,36 +237,36 @@ export default Ember.Component.extend({
 
     /*This variable holds the two markers for the two players*/
     var markers ={
-      'x': [],
-      'o': []
+      'a': [],
+      'b': []
     }
     /*This for loop sets the initial marker count (0), a marker limit (21) and
     allows for the count to go up from 0 to 21. Due to the board having 42 spaces
     each player will only require 21 markers. This will stop the game adding
     additional markers following the conclusion of the game*/
-    for(var x = 0; x < 21; x++) {
+    for(var a = 0; a < 21; a++) {
 
-      /*This creates the shape of the marker 'o' and adds it to the variable
+      /*This creates the shape of the marker 'b' and adds it to the variable
       created above. It fills it with a colour and adjusts the size to 19, which
       is the perfect size for the grid created above. It then sets the initial
       visibility to 'false' so that the markers cannot be seen until used by the
       player*/
-      var oMarker = new createjs.Shape();
-      graphics = oMarker.graphics;
+      var bMarker = new createjs.Shape();
+      graphics = bMarker.graphics;
       graphics.beginFill('#feda6a');
       graphics.drawCircle(0, 0, 19);
-      oMarker.visible = false;
-      stage.addChild(oMarker);
-      markers.o.push(oMarker);
+      bMarker.visible = false;
+      stage.addChild(bMarker);
+      markers.b.push(bMarker);
 
-      /*The above process is repeated for the 'x' marker*/
-      var xMarker = new createjs.Shape();
-      graphics = xMarker.graphics;
+      /*The above process is repeated for the 'a' marker*/
+      var aMarker = new createjs.Shape();
+      graphics = aMarker.graphics;
       graphics.beginFill('#393f4d');
       graphics.drawCircle(0, 0, 19);
-      xMarker.visible = false;
-      stage.addChild(xMarker);
-      markers.x.push(xMarker);
+      aMarker.visible = false;
+      stage.addChild(aMarker);
+      markers.a.push(aMarker);
     }
 
     /*These twp lines assign the markers and stage components names to be called
@@ -305,12 +305,12 @@ export default Ember.Component.extend({
 
         /*The state must be called upon in order to check whether there is a marker
         in the selected grid square. The while loop then ensures that the marker
-        can only be placed in the square if it doesn't have an 'x' or 'o' in it -
-        i.e. it's undefined. If it does have an 'x' or 'o' in the space then 1 will
+        can only be placed in the square if it doesn't have an 'a' or 'b' in it -
+        i.e. it's undefined. If it does have an 'a' or 'b' in the space then 1 will
         be taken away from the y. This will ensure the marker moves up the grid until
         a free space is found*/
         var state = component.get('state');
-        while (state[x][y] == 'x' || state[x][y] == 'o'){
+        while (state[x][y] == 'a' || state[x][y] == 'b'){
           y = y - 1;
         }
 
@@ -321,15 +321,15 @@ export default Ember.Component.extend({
           /*This plays a sound from the SoundJS library upon placing a marker*/
           createjs.Sound.play("place-marker");
 
-          /*This ensures the player is currently 'x' and therefore the click
+          /*This ensures the player is currently 'a' and therefore the click
           is registered meaning player markers cannot be placed when it's the
           computer move*/
-          state[x][y] = 'x';
+          state[x][y] = 'a';
 
           /*The move_count variable is created to store the moves to ensure that
           the moves can't exceed the maximum amount of turns for the game*/
-          var move_count = component.get('moves')['x'];
-          var marker = component.get('markers')['x'][move_count];
+          var move_count = component.get('moves')['a'];
+          var marker = component.get('markers')['a'][move_count];
 
           /*The marker visibility is turned to true so the move can be seen*/
           marker.visible = true;
@@ -346,7 +346,7 @@ export default Ember.Component.extend({
           component.get('stage').update();
 
           /*The move_count variable is increased by one*/
-          component.get('moves')['x'] = move_count + 1;
+          component.get('moves')['a'] = move_count + 1;
 
           /*The setTimeout function ensures a slight gap in time between the
           human player and the computer player making a move. This is an aesthetic
@@ -361,13 +361,13 @@ export default Ember.Component.extend({
               /*A sound is played upon the computer making a move*/
               createjs.Sound.play("place-marker");
 
-              /*The computer_move is called upon and sets the move as the 'o' player*/
+              /*The computer_move is called upon and sets the move as the 'b' player*/
               var move = component.computer_move(state);
-              state[move.x][move.y] = 'o';
+              state[move.x][move.y] = 'b';
 
-              /*The 'o' marker and move_count are then called*/
-              marker = component.get('markers')['o'][move_count];
-              move_count = component.get('moves')['o'][move_count];
+              /*The 'b' marker and move_count are then called*/
+              marker = component.get('markers')['b'][move_count];
+              move_count = component.get('moves')['b'][move_count];
 
               /*The marker is set to true visibility so it can be seen and the
               x and y coordinates are set with the offsetX and offsetY taken
@@ -387,27 +387,6 @@ export default Ember.Component.extend({
           /*The 500 is the setting for the timeout between user and computer moves*/
         }, 500);
         }
-      }
-    }
-  },
-
-  /*The check_winner function changes the draw and winner variables if the board
-  is full without a matching pattern or if a matching pattern is found respectively.*/
-  check_winner: function() {
-
-    /*The current state and the check_game_winner elements are called in*/
-    var state = this.get('state');
-    var winner = check_game_winner(state);
-
-    /*This nested if statement asks if a pattern match has been found. If it
-    has then the winner is set. If not then it asks if there is still space left
-    on the board. If there isn't then the draw is set. If neither of these occur
-    then the game is allowed to continue*/
-    if(winner !== undefined) {
-      if(winner === '') {
-        this.set('draw', true);
-      } else {
-        this.set('winner', winner);
       }
     }
   },
@@ -441,13 +420,13 @@ export default Ember.Component.extend({
               if(limit === 1 || check_game_winner(move.state) !== undefined) {
                 if(check_game_winner(move.state) !== undefined) {
                   var winner = check_game_winner(move.state);
-                  if(winner === 'o') {
+                  if(winner === 'b') {
                     move.score = 1000;
 
                   /*...or it's set to -1000 if the player user can win on the next
                   turn. This creates a somewhat realistic AI, whilst also making
                   the computer beatable.*/
-                  } else if(winner === 'x') {
+                  } else if(winner === 'a') {
                     move.score = -1000;
                   }
                 }
@@ -456,14 +435,14 @@ export default Ember.Component.extend({
               an AI score is set determined on what can be done after the next user
               move is made.*/
               } else {
-                move.moves = minimax(move.state, limit - 1, player == 'x' ? 'o' : 'x');
+                move.moves = minimax(move.state, limit - 1, player == 'a' ? 'b' : 'a');
                 var score = undefined;
                 for(var idx3 = 0; idx3 < move.moves.length; idx3++) {
                   if(score === undefined) {
                     score = move.moves[idx3].score;
-                  } else if(player === 'x') {
+                  } else if(player === 'a') {
                     score = Math.max(score, move.moves[idx3].score);
-                  } else if(player === 'o') {
+                  } else if(player === 'b') {
                     score = Math.min(score, move.moves[idx3].score);
                   }
                 }
@@ -483,7 +462,7 @@ export default Ember.Component.extend({
     /*These variables are set in order to define whether the move has been made
     and the max_score of the move to set the computer AI - whether it is going to
     attack or defend a position depending on whether it can win or lose the game*/
-    var moves = minimax(state, 2, 'o');
+    var moves = minimax(state, 2, 'b');
     var max_score = undefined;
     var move = undefined;
 
@@ -502,6 +481,26 @@ export default Ember.Component.extend({
     return move;
   },
 
+  /*The check_winner function changes the draw and winner variables if the board
+  is full without a matching pattern or if a matching pattern is found respectively.*/
+  check_winner: function() {
+
+    /*The current state and the check_game_winner elements are called in*/
+    var state = this.get('state');
+    var winner = check_game_winner(state);
+
+    /*This nested if statement asks if a pattern match has been found. If it
+    has then the winner is set. If not then it asks if there is still space left
+    on the board. If there isn't then the draw is set. If neither of these occur
+    then the game is allowed to continue*/
+    if(winner !== undefined) {
+      if(winner === '') {
+        this.set('draw', true);
+      } else {
+        this.set('winner', winner);
+      }
+    }
+  },
 
   actions: {
     /*This main function is used by the 'Main Menu' button within the game for
@@ -526,8 +525,8 @@ export default Ember.Component.extend({
       if(this.get('playing')){
         var markers = this.get('markers');
         for(var idx = 0; idx < 21; idx++){
-          createjs.Tween.get(markers.x[idx]).to({y: 600}, 500);
-          createjs.Tween.get(markers.o[idx]).to({y: 600}, 500);
+          createjs.Tween.get(markers.a[idx]).to({y: 600}, 500);
+          createjs.Tween.get(markers.b[idx]).to({y: 600}, 500);
         }
 
         /*A sound is played as the counters fall*/
@@ -556,15 +555,15 @@ export default Ember.Component.extend({
 
       /*This ensures that player moves are set to 0 to start the game and
       sets the starting player as 'x'*/
-      this.set('moves', {'x': 0, 'o': 0});
-      this.set('player', 'x');
+      this.set('moves', {'a': 0, 'b': 0});
+      this.set('player', 'a');
 
       /*This makes sure that all the markers are set to invisible to start
       the game*/
       var call_markers = this.get('markers');
       for(var idx4 = 0; idx4 < 42; idx4++) {
-        call_markers.x[idx].visible = false;
-        call_markers.o[idx].visible = false;
+        call_markers.a[idx].visible = false;
+        call_markers.b[idx].visible = false;
       }
     }
   }
