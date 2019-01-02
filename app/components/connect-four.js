@@ -172,10 +172,7 @@ export default Ember.Component.extend({
     when a marker is placed and for when the game is reset*/
     this._super(...arguments);
     createjs.Sound.registerSound("assets/click.wav", "place-marker");
-    createjs.Sound.registerSound("assets/falling.mp3", "falling");
-    /*The following line is part of the refactoring process to allow the computer
-    player component to work.*/
-    var component = this;
+    createjs.Sound.registerSound("assets/falling.mp3", "falling");    
   },
 
   /*This function allows the insertion of elements such as the board graphics

@@ -23,6 +23,14 @@ the intro text on the Connect Four game*/
   text-align: center;
   margin-bottom: 2px;
 }
+
+/*overrides other css factors for the text notifying the winner*/
+#winner {
+  color: #feda6a;
+  font-size: 20pt;
+  font-weight: bold;
+  text-align: center;
+}
 a {
   color: #393f4d;
 }
