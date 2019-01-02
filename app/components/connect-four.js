@@ -18,8 +18,8 @@ function deepClone(state) {
 makes their turn. It will circle over the patterns below in order to see if
 there is a corresponding pattern within the confines of the playing board, which
 will be defined by the state of the grid cells - i.e. if they have changed from
-their original 'undefined' state to one being filled with either an 'a' marker
-or a 'b' marker*/
+their original 'undefined' state to one being filled with either an 'Grey' marker
+or a 'Yellow' marker*/
 function check_game_winner(state) {
 
   var patterns = [
@@ -237,36 +237,36 @@ export default Ember.Component.extend({
 
     /*This variable holds the two markers for the two players*/
     var markers ={
-      'a': [],
-      'b': []
+      'Grey': [],
+      'Yellow': []
     }
     /*This for loop sets the initial marker count (0), a marker limit (21) and
     allows for the count to go up from 0 to 21. Due to the board having 42 spaces
     each player will only require 21 markers. This will stop the game adding
     additional markers following the conclusion of the game*/
-    for(var a = 0; a < 21; a++) {
+    for(var Grey = 0; Grey < 21; Grey++) {
 
-      /*This creates the shape of the marker 'b' and adds it to the variable
+      /*This creates the shape of the marker 'Yellow' and adds it to the variable
       created above. It fills it with a colour and adjusts the size to 19, which
       is the perfect size for the grid created above. It then sets the initial
       visibility to 'false' so that the markers cannot be seen until used by the
       player*/
-      var bMarker = new createjs.Shape();
-      graphics = bMarker.graphics;
+      var YellowMarker = new createjs.Shape();
+      graphics = YellowMarker.graphics;
       graphics.beginFill('#feda6a');
       graphics.drawCircle(0, 0, 19);
-      bMarker.visible = false;
-      stage.addChild(bMarker);
-      markers.b.push(bMarker);
+      YellowMarker.visible = false;
+      stage.addChild(YellowMarker);
+      markers.Yellow.push(YellowMarker);
 
       /*The above process is repeated for the 'a' marker*/
-      var aMarker = new createjs.Shape();
-      graphics = aMarker.graphics;
+      var GreyMarker = new createjs.Shape();
+      graphics = GreyMarker.graphics;
       graphics.beginFill('#393f4d');
       graphics.drawCircle(0, 0, 19);
-      aMarker.visible = false;
-      stage.addChild(aMarker);
-      markers.a.push(aMarker);
+      GreyMarker.visible = false;
+      stage.addChild(GreyMarker);
+      markers.Grey.push(GreyMarker);
     }
 
     /*These twp lines assign the markers and stage components names to be called
@@ -305,12 +305,12 @@ export default Ember.Component.extend({
 
         /*The state must be called upon in order to check whether there is a marker
         in the selected grid square. The while loop then ensures that the marker
-        can only be placed in the square if it doesn't have an 'a' or 'b' in it -
-        i.e. it's undefined. If it does have an 'a' or 'b' in the space then 1 will
+        can only be placed in the square if it doesn't have an 'Grey' or 'Yellow' in it -
+        i.e. it's undefined. If it does have an 'Grey' or 'Yellow' in the space then 1 will
         be taken away from the y. This will ensure the marker moves up the grid until
         a free space is found*/
         var state = component.get('state');
-        while (state[x][y] == 'a' || state[x][y] == 'b'){
+        while (state[x][y] == 'Grey' || state[x][y] == 'Yellow'){
           y = y - 1;
         }
 
@@ -321,15 +321,15 @@ export default Ember.Component.extend({
           /*This plays a sound from the SoundJS library upon placing a marker*/
           createjs.Sound.play("place-marker");
 
-          /*This ensures the player is currently 'a' and therefore the click
+          /*This ensures the player is currently 'Grey' and therefore the click
           is registered meaning player markers cannot be placed when it's the
           computer move*/
-          state[x][y] = 'a';
+          state[x][y] = 'Grey';
 
           /*The move_count variable is created to store the moves to ensure that
           the moves can't exceed the maximum amount of turns for the game*/
-          var move_count = component.get('moves')['a'];
-          var marker = component.get('markers')['a'][move_count];
+          var move_count = component.get('moves')['Grey'];
+          var marker = component.get('markers')['Grey'][move_count];
 
           /*The marker visibility is turned to true so the move can be seen*/
           marker.visible = true;
@@ -346,7 +346,7 @@ export default Ember.Component.extend({
           component.get('stage').update();
 
           /*The move_count variable is increased by one*/
-          component.get('moves')['a'] = move_count + 1;
+          component.get('moves')['Grey'] = move_count + 1;
 
           /*The setTimeout function ensures a slight gap in time between the
           human player and the computer player making a move. This is an aesthetic
@@ -361,13 +361,13 @@ export default Ember.Component.extend({
               /*A sound is played upon the computer making a move*/
               createjs.Sound.play("place-marker");
 
-              /*The computer_move is called upon and sets the move as the 'b' player*/
+              /*The computer_move is called upon and sets the move as the 'Yellow' player*/
               var move = component.computer_move(state);
-              state[move.x][move.y] = 'b';
+              state[move.x][move.y] = 'Yellow';
 
-              /*The 'b' marker and move_count are then called*/
-              marker = component.get('markers')['b'][move_count];
-              move_count = component.get('moves')['b'][move_count];
+              /*The 'Yellow' marker and move_count are then called*/
+              marker = component.get('markers')['Yellow'][move_count];
+              move_count = component.get('moves')['Yellow'][move_count];
 
               /*The marker is set to true visibility so it can be seen and the
               x and y coordinates are set with the offsetX and offsetY taken
@@ -377,7 +377,7 @@ export default Ember.Component.extend({
               marker.y = 48 + move.y * 50;
 
               /*1 is added to the move_count for the computer player*/
-              component.get('moves')['o'] = move_count + 1;
+              component.get('moves')['Yellow'] = move_count + 1;
 
               /*The stage is updated again and there is a check to see if there
               is a winner*/
@@ -420,13 +420,13 @@ export default Ember.Component.extend({
               if(limit === 1 || check_game_winner(move.state) !== undefined) {
                 if(check_game_winner(move.state) !== undefined) {
                   var winner = check_game_winner(move.state);
-                  if(winner === 'b') {
+                  if(winner === 'Yellow') {
                     move.score = 1000;
 
                   /*...or it's set to -1000 if the player user can win on the next
                   turn. This creates a somewhat realistic AI, whilst also making
                   the computer beatable.*/
-                  } else if(winner === 'a') {
+                  } else if(winner === 'Grey') {
                     move.score = -1000;
                   }
                 }
@@ -435,14 +435,14 @@ export default Ember.Component.extend({
               an AI score is set determined on what can be done after the next user
               move is made.*/
               } else {
-                move.moves = minimax(move.state, limit - 1, player == 'a' ? 'b' : 'a');
+                move.moves = minimax(move.state, limit - 1, player == 'Grey' ? 'Yellow' : 'Grey');
                 var score = undefined;
                 for(var idx3 = 0; idx3 < move.moves.length; idx3++) {
                   if(score === undefined) {
                     score = move.moves[idx3].score;
-                  } else if(player === 'a') {
+                  } else if(player === 'Grey') {
                     score = Math.max(score, move.moves[idx3].score);
-                  } else if(player === 'b') {
+                  } else if(player === 'Yellow') {
                     score = Math.min(score, move.moves[idx3].score);
                   }
                 }
@@ -462,7 +462,7 @@ export default Ember.Component.extend({
     /*These variables are set in order to define whether the move has been made
     and the max_score of the move to set the computer AI - whether it is going to
     attack or defend a position depending on whether it can win or lose the game*/
-    var moves = minimax(state, 2, 'b');
+    var moves = minimax(state, 2, 'Yellow');
     var max_score = undefined;
     var move = undefined;
 
@@ -525,8 +525,8 @@ export default Ember.Component.extend({
       if(this.get('playing')){
         var markers = this.get('markers');
         for(var idx = 0; idx < 21; idx++){
-          createjs.Tween.get(markers.a[idx]).to({y: 600}, 500);
-          createjs.Tween.get(markers.b[idx]).to({y: 600}, 500);
+          createjs.Tween.get(markers.Grey[idx]).to({y: 600}, 500);
+          createjs.Tween.get(markers.Yellow[idx]).to({y: 600}, 500);
         }
 
         /*A sound is played as the counters fall*/
@@ -554,16 +554,16 @@ export default Ember.Component.extend({
       ]);
 
       /*This ensures that player moves are set to 0 to start the game and
-      sets the starting player as 'x'*/
-      this.set('moves', {'a': 0, 'b': 0});
-      this.set('player', 'a');
+      sets the starting player as 'Grey'*/
+      this.set('moves', {'Grey': 0, 'Yellow': 0});
+      this.set('player', 'Grey');
 
       /*This makes sure that all the markers are set to invisible to start
       the game*/
       var call_markers = this.get('markers');
       for(var idx4 = 0; idx4 < 42; idx4++) {
-        call_markers.a[idx].visible = false;
-        call_markers.b[idx].visible = false;
+        call_markers.Grey[idx].visible = false;
+        call_markers.Yellow[idx].visible = false;
       }
     }
   }
